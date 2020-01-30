@@ -41,15 +41,15 @@ public class DepartmentMain {
 				PreparedStatement pstmt = con.prepareStatement(insertSql);
 				PreparedStatement pstmt2 = con.prepareStatement(updateSql);
 				PreparedStatement pstmt3 = con.prepareStatement(deleteSql)){
-			pstmt.setInt(1, 5);
+			pstmt.setInt(1, 7);
 			pstmt.setString(2, "행정");
 			pstmt.setInt(3, 30);
 			
 			pstmt2.setString(1, "마케팅");
 			pstmt2.setInt(2, 12);
-			pstmt2.setInt(3, 5);
+			pstmt2.setInt(3, 7);
 			
-			pstmt3.setInt(1, 5);
+			pstmt3.setInt(1, 7);
 			
 			System.out.println("연결 성공 " + pstmt + "\n" + pstmt2 + "\n" + pstmt3);
 			

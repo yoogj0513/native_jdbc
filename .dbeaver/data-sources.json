@@ -12,14 +12,13 @@
 				"port": "3306",
 				"url": "jdbc:mysql://localhost:3306/",
 				"home": "C:\\Program Files\\MySQL\\MySQL Server 5.7",
-				"type": "dev",
-				"handlers": {}
+				"type": "dev"
 			}
 		},
 		"mysql5-16ff1d879dd-22cdd3f3e9528cbd": {
 			"provider": "mysql",
 			"driver": "mysql5",
-			"name": "MySQL - mysql_study",
+			"name": "MySQL - mysql_study(user)",
 			"save-password": true,
 			"read-only": false,
 			"configuration": {
@@ -28,8 +27,7 @@
 				"database": "mysql_study",
 				"url": "jdbc:mysql://localhost:3306/mysql_study",
 				"home": "C:\\Program Files\\MySQL\\MySQL Server 5.7",
-				"type": "dev",
-				"handlers": {}
+				"type": "dev"
 			}
 		}
 	},
