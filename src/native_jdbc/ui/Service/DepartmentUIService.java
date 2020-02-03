@@ -7,9 +7,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import native_jdbc.dao.DepartmentDao;
-import native_jdbc.dao.DepartmentDaoImpl;
 import native_jdbc.dao.EmployeeDao;
-import native_jdbc.dao.EmployeeDaoImpl;
+import native_jdbc.daoimpl.DepartmentDaoImpl;
+import native_jdbc.daoimpl.EmployeeDaoImpl;
 import native_jdbc.ds.Hikari_DataSource2;
 import native_jdbc.dto.Department;
 import native_jdbc.dto.Employee;

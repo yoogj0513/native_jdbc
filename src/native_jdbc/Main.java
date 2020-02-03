@@ -7,9 +7,9 @@ import java.util.List;
 import javax.swing.JDialog;
 
 import native_jdbc.dao.DepartmentDao;
-import native_jdbc.dao.DepartmentDaoImpl;
 import native_jdbc.dao.EmployeeDao;
-import native_jdbc.dao.EmployeeDaoImpl;
+import native_jdbc.daoimpl.DepartmentDaoImpl;
+import native_jdbc.daoimpl.EmployeeDaoImpl;
 import native_jdbc.ds.C3P0DataSource;
 import native_jdbc.ds.DBCPDataSource;
 import native_jdbc.ds.Hikari_DataSource;
