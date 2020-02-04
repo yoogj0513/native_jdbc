@@ -97,7 +97,7 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		return String.format("[%s, %s, %s, %s, %s, %s %s]", 
+		return String.format("[%s %s %s %s %s %s %s]", 
 				empNo, empName, title, manager.getEmpNo() == 0 ? "null" : manager.getEmpNo(), salary, dept.getDeptNo(), 
 						pic==null?"null":pic.length);
 	}
