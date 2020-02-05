@@ -1,7 +1,5 @@
 package native_jdbc.dao;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,8 +10,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -23,6 +19,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import native_jdbc.LogUtil;
 import native_jdbc.daoimpl.EmployeeDaoImpl;
 import native_jdbc.ds.MysqlDataSource;
 import native_jdbc.dto.Department;
@@ -30,7 +27,6 @@ import native_jdbc.dto.Employee;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmployeeDaoTest {
-	private static Logger logger = LogManager.getLogger();
 	private Connection con;
 	private static EmployeeDao dao;
 	private static File imagesDir;
@@ -38,7 +34,7 @@ public class EmployeeDaoTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		logger.debug("setUpBeforeClass");
+		LogUtil.prnLog("setUpBeforeClass");
 		dao = EmployeeDaoImpl.getInstance();
 		picsDir = new File(System.getProperty("user.dir") + File.separator + "pics" + File.separator);
 		if(!picsDir.exists()) {
@@ -49,24 +45,24 @@ public class EmployeeDaoTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		logger.debug("tearDownAfterClass");
+		LogUtil.prnLog("tearDownAfterClass");
 		dao = null;
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		logger.debug("setUp");
+		LogUtil.prnLog("setUp");
 		con = MysqlDataSource.getConnection();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		logger.debug("tearDown");
+		LogUtil.prnLog("tearDown");
 		con.close();
 	}
 	@Test
 	public void test01SelectEmployeeByEmpNo() {
-		logger.debug("test01SelectEmployeeByDno");
+		LogUtil.prnLog("test01SelectEmployeeByDno");
 		Employee emp = new Employee(1004);
 		try {			
 			Employee selectedEmp = dao.selectEmployeeByEmpNo(con, emp);
@@ -74,9 +70,9 @@ public class EmployeeDaoTest {
 				getImgesToPic(selectedEmp.getPic(), selectedEmp.getEmpNo()); //프로젝트 폴더의 pics폴더에 사원번호.jpg 파일이 생성
 			}
 			Assert.assertNotNull(selectedEmp);
-			logger.trace(selectedEmp);
+			LogUtil.prnLog(selectedEmp);
 		} catch (RuntimeException e) {
-			logger.debug(e.getMessage());
+			LogUtil.prnLog(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -94,22 +90,22 @@ public class EmployeeDaoTest {
 
 	@Test
 	public void test02SelectEmployeeByAll() throws SQLException {
-		logger.debug("test02SelectEmployeeByAll");
+		LogUtil.prnLog("test02SelectEmployeeByAll");
 		List<Employee> lists = dao.selectEmployeeByAll(con);
 		Assert.assertNotEquals(0, lists.size());
-		for(Employee e : lists) logger.trace(e);
+		for(Employee e : lists) LogUtil.prnLog(e);
 	}
 
 	@Test
 	public void test03SelectEmployeeGroupByDno() {
-		logger.debug("test03SelectEmployeeGroupByDno");
+		LogUtil.prnLog("test03SelectEmployeeGroupByDno");
 		Department dept = new Department();
 		dept.setDeptNo(2);
 		List<Employee> lists;
 		try {
 			lists = dao.selectEmployeeGroupByDno(con, dept);
 			Assert.assertNotEquals(0, lists.size());
-			for(Employee e : lists) logger.trace(e);
+			for(Employee e : lists) LogUtil.prnLog(e);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -120,18 +116,18 @@ public class EmployeeDaoTest {
 
 	@Test
 	public void test06DeleteEmployee() throws SQLException {
-		logger.debug("test06DeleteEmployee");
+		LogUtil.prnLog("test06DeleteEmployee");
 		Employee emp = new Employee(1004);
 		int res = dao.deleteEmployee(con, emp);
-		logger.trace(res);
+		LogUtil.prnLog(res);
 		Assert.assertEquals(1, res);
 	}
 
 	@Test
 	public void test04InsertEmployee() {
-		logger.debug("test04InsertEmployee");
+		LogUtil.prnLog("test04InsertEmployee");
 		Employee emp = new Employee(1004, "서현진", "사원", new Employee(1003), 1500000, new Department(1), getImage("seohyunjin.jpg"));
-		logger.debug(emp);
+		LogUtil.prnLog(emp);
 		int res = dao.insertEmployee(con, emp);
 		Assert.assertEquals(1, res);
 	}
@@ -153,17 +149,13 @@ public class EmployeeDaoTest {
 
 	@Test
 	public void test05UpdateEmployee() throws IOException {
-		logger.debug("test05UpdateEmployee");
+		LogUtil.prnLog("test05UpdateEmployee");
 		
 		Employee emp = new Employee(1004, "이유영", "대리", new Employee(3426), 3500000, new Department(1));
-		try {
-			emp.setPic(getImage("lyy.jpg"));
-			int res = dao.updateEmployee(con, emp);
-			logger.trace(res);
-			Assert.assertEquals(1, res);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		emp.setPic(getImage("lyy.jpg"));
+		int res = dao.updateEmployee(con, emp);
+		LogUtil.prnLog(res);
+		Assert.assertEquals(1, res);
 	}
 
 }

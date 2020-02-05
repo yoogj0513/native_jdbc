@@ -15,48 +15,48 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import native_jdbc.LogUtil;
 import native_jdbc.daoimpl.DepartmentDaoImpl;
 import native_jdbc.ds.MysqlDataSource;
 import native_jdbc.dto.Department;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DepartmentDaoTest {
-	private static Logger logger = LogManager.getLogger();
 	private Connection con;
 	private static DepartmentDao dao;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		logger.debug("setUpBeforeClass");
+		LogUtil.prnLog("setUpBeforeClass");
 		dao = DepartmentDaoImpl.getInstace();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		logger.debug("tearDownAfterClass");
+		LogUtil.prnLog("tearDownAfterClass");
 		dao = null;
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		logger.debug("setUp");
+		LogUtil.prnLog("setUp");
 		con = MysqlDataSource.getConnection();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		logger.debug("tearDown");
+		LogUtil.prnLog("tearDown");
 		con.close();
 	}
 
 	@Test
 	public void test01SelectDepartmentByAll() {
-		logger.debug("test01SelectDepartmentByAll");
+		LogUtil.prnLog("test01SelectDepartmentByAll");
 		try {
 			List<Department> lists = dao.selectDepartmentByAll(con);
 			Assert.assertNotEquals(-1, lists.size());
 			for(Department d : lists) {
-				logger.trace(d);
+				LogUtil.prnLog(d);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -66,7 +66,7 @@ public class DepartmentDaoTest {
 
 	@Test
 	public void test02InsertDepartment() throws SQLException {
-		logger.debug("testInsertDepartment");
+		LogUtil.prnLog("testInsertDepartment");
 		Department department = new Department(5, "마케팅", 4);
 		int res = dao.insertDepartment(con, department);
 		Assert.assertEquals(1, res);
@@ -74,7 +74,7 @@ public class DepartmentDaoTest {
 
 	@Test
 	public void test03UpdateDepartment() throws SQLException {
-		logger.debug("testUpdateDepartment");
+		LogUtil.prnLog("testUpdateDepartment");
 		Department department = new Department(5, "마케팅3", 4);
 		int res = dao.updateDepartment(con, department);
 		Assert.assertEquals(1, res);
@@ -82,7 +82,7 @@ public class DepartmentDaoTest {
 
 	@Test
 	public void test04DeleteDepartment() throws SQLException {
-		logger.debug("testDeleteDepartment");
+		LogUtil.prnLog("testDeleteDepartment");
 		Department department = new Department(5, "마케팅3", 4);
 		int res = dao.deleteDepartment(con, department);
 		Assert.assertEquals(1, res);
@@ -90,10 +90,10 @@ public class DepartmentDaoTest {
 	
 	@Test
 	public void test05SelectDepartmentByNo() throws SQLException {
-		logger.debug("test05SelectDepartmentByNo()");
+		LogUtil.prnLog("test05SelectDepartmentByNo()");
 		Department department = dao.selectDepartmentByNo(con, 1);
 		Assert.assertNotNull(department);
-		logger.trace(department);
+		LogUtil.prnLog(department);
 	}
 
 }

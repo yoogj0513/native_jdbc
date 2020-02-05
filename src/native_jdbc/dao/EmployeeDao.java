@@ -14,9 +14,9 @@ public interface EmployeeDao {
 	
 	List<Employee> selectEmployeeGroupByDno(Connection con, Department dept) throws SQLException;
 	
-	int deleteEmployee(Connection con, Employee employee) throws SQLException;
+	int deleteEmployee(Connection con, Employee employee);
 	
 	int insertEmployee(Connection con, Employee employee);
 	
-	int updateEmployee(Connection con, Employee employee) throws SQLException;
+	int updateEmployee(Connection con, Employee employee);
 }
