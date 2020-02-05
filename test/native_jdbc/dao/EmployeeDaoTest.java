@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -33,12 +34,16 @@ public class EmployeeDaoTest {
 	private Connection con;
 	private static EmployeeDao dao;
 	private static File imagesDir;
+	private static File picsDir;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		logger.debug("setUpBeforeClass");
 		dao = EmployeeDaoImpl.getInstance();
-		
+		picsDir = new File(System.getProperty("user.dir") + File.separator + "pics" + File.separator);
+		if(!picsDir.exists()) {
+			picsDir.mkdir(); //picsDir이 없다면 만들어줌
+		}
 		imagesDir = new File(System.getProperty("user.dir") + File.separator + "\\images" + File.separator);
 	}
 
@@ -60,15 +65,29 @@ public class EmployeeDaoTest {
 		con.close();
 	}
 	@Test
-	public void test01SelectEmployeeByDno() {
+	public void test01SelectEmployeeByEmpNo() {
 		logger.debug("test01SelectEmployeeByDno");
-		Employee emp = new Employee(1003);
+		Employee emp = new Employee(1004);
 		try {			
 			Employee selectedEmp = dao.selectEmployeeByEmpNo(con, emp);
+			if(selectedEmp.getPic() != null) {				
+				getImgesToPic(selectedEmp.getPic(), selectedEmp.getEmpNo()); //프로젝트 폴더의 pics폴더에 사원번호.jpg 파일이 생성
+			}
 			Assert.assertNotNull(selectedEmp);
 			logger.trace(selectedEmp);
 		} catch (RuntimeException e) {
 			logger.debug(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	private void getImgesToPic(byte[] pic, int empNo) {
+		File file = new File(picsDir, empNo+".jpg");
+		try(FileOutputStream fis = new FileOutputStream(file)){
+			fis.write(pic);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -100,9 +119,12 @@ public class EmployeeDaoTest {
 	}
 
 	@Test
-	public void test06DeleteEmployee() {
+	public void test06DeleteEmployee() throws SQLException {
 		logger.debug("test06DeleteEmployee");
-		fail("Not yet implemented");
+		Employee emp = new Employee(1004);
+		int res = dao.deleteEmployee(con, emp);
+		logger.trace(res);
+		Assert.assertEquals(1, res);
 	}
 
 	@Test
@@ -130,9 +152,18 @@ public class EmployeeDaoTest {
 	}
 
 	@Test
-	public void test05UpdateEmployee() {
+	public void test05UpdateEmployee() throws IOException {
 		logger.debug("test05UpdateEmployee");
-		fail("Not yet implemented");
+		
+		Employee emp = new Employee(1004, "이유영", "대리", new Employee(3426), 3500000, new Department(1));
+		try {
+			emp.setPic(getImage("lyy.jpg"));
+			int res = dao.updateEmployee(con, emp);
+			logger.trace(res);
+			Assert.assertEquals(1, res);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

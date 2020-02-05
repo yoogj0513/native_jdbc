@@ -33,7 +33,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			logger.trace(pstmt);
 			try(ResultSet rs = pstmt.executeQuery()){
 				if(rs.next()) {
-					return getEmployee(rs);
+					return getEmployee(rs, true);
 				}
 			}
 		} catch (SQLException e) {
@@ -81,13 +81,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
 				ResultSet rs = pstmt.executeQuery()){
 			logger.trace(pstmt);
 			while(rs.next()) {
-				list.add(getEmployee(rs));
+				list.add(getEmployee(rs, false));
 			}
 		}
 		return list;
 	}
 
-	private Employee getEmployee(ResultSet rs) throws SQLException {
+	private Employee getEmployee(ResultSet rs, boolean isPic) throws SQLException {
 		int empNo = rs.getInt("empno");
 		String empName = rs.getString("empname");
 		String title = rs.getString("title");
@@ -95,13 +95,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		int salary = rs.getInt("salary");
 		Department dept = new Department();
 		dept.setDeptNo(rs.getInt("dno"));
+		Employee employee = new Employee(empNo, empName, title, manager, salary, dept);
+		if(isPic) {
+			employee.setPic(rs.getBytes("pic"));
+		}
+		
 		return new Employee(empNo, empName, title, manager, salary, dept);
 	}
 
 	@Override
-	public int deleteEmployee(Connection con, Employee employee) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteEmployee(Connection con, Employee employee) throws SQLException {
+		String sql = "delete from employee where empno = ?";
+		try (PreparedStatement pstmt = con.prepareStatement(sql)){
+			pstmt.setInt(1, employee.getEmpNo());
+			logger.trace(pstmt);
+			return pstmt.executeUpdate();
+		}
 	}
 
 	@Override
@@ -133,9 +142,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	}
 
 	@Override
-	public int updateEmployee(Connection con, Employee employee) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateEmployee(Connection con, Employee employee) throws SQLException {
+		String sql = "update employee set empname=?, title=?, manager=?, salary=?, dno=?, pic=?"
+					+ "where empno=?";
+		
+		try(PreparedStatement pstmt = con.prepareStatement(sql)){
+			pstmt.setString(1, employee.getEmpName());
+			pstmt.setString(2, employee.getTitle());
+			pstmt.setInt(3, employee.getManager().getEmpNo());
+			pstmt.setInt(4, employee.getSalary());
+			pstmt.setInt(5, employee.getDept().getDeptNo());
+			pstmt.setInt(7, employee.getEmpNo());
+			logger.trace(pstmt);
+			pstmt.setBytes(6, employee.getPic());
+			return pstmt.executeUpdate();
+		}
+		
 	}
 
 }
