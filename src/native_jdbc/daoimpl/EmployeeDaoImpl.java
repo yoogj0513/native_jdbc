@@ -1,5 +1,6 @@
 package native_jdbc.daoimpl;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -159,6 +160,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public List<Employee> procedureEmployeeByDno(Connection con, int dno) throws SQLException {
+		String sql = "{call procedure_01(?)}";
+		List<Employee> list = new ArrayList<>();
+		try(CallableStatement cs = con.prepareCall(sql)){
+			cs.setInt(1, dno);
+			LogUtil.prnLog(cs);
+			try(ResultSet rs = cs.executeQuery()){
+				while(rs.next()) {
+					list.add(getEmployee(rs, false));
+				}
+			}
+		}
+		return list;
 	}
 
 }

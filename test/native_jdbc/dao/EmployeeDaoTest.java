@@ -157,5 +157,17 @@ public class EmployeeDaoTest {
 		LogUtil.prnLog(res);
 		Assert.assertEquals(1, res);
 	}
+	
+	
+	
+	@Test
+	public void test06procedureEmployeeByDno() throws IOException, SQLException {
+		LogUtil.prnLog(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		List<Employee> list = dao.procedureEmployeeByDno(con, 2);
+		Assert.assertNotEquals(0, list.size());
+		for(Employee emp : list) {
+			LogUtil.prnLog(emp);
+		}
+	}
 
 }
